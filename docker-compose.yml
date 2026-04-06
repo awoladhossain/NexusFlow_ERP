@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  nexus-db:
+    image: postgres:15-alpine
+    container_name: nexus-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - nexus-db-data:/var/lib/postgresql/data
+
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: nexus-pgadmin
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+  #   ports:
+  #     - "${PGADMIN_PORT}:80"
+  #   depends_on:
+  #     - nexus-db
+
+  nexus-redis:
+    image: redis:alpine
+    container_name: nexus-redis
+    restart: always
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - nexus-redis-data:/data
+
+volumes:
+  nexus-db-data:
+  nexus-redis-data:
